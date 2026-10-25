@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyterlink"
+dynamic = ["version"]
+description = "Wire-compatible Python/Linux port of MS-DOS 6.22 INTERLNK.EXE + INTERSVR.EXE"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "GPL-3.0-or-later"
+authors = [{ name = "Kris Kirby" }]
+keywords = ["interlnk", "intersvr", "ms-dos", "serial", "null-modem", "nbd", "fat", "dosbox"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "Intended Audience :: System Administrators",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Communications",
+    "Topic :: System :: Archiving :: Mirroring",
+    "Topic :: System :: Filesystems",
+    "Topic :: System :: Emulators",
+]
+dependencies = [
+    "pyserial>=3.5",
+]
+
+[project.urls]
+Homepage = "https://github.com/ke4ahr/Pyterlink/"
+Repository = "https://github.com/ke4ahr/Pyterlink.git"
+Issues = "https://github.com/ke4ahr/Pyterlink/issues"
+Changelog = "https://github.com/ke4ahr/Pyterlink/blob/main/CHANGELOG.md"
+
+[project.scripts]
+pyterlink-server = "pyterlink.server.cli:main"
+pyterlink-client = "pyterlink.client.cli:main"
+pyterlink-nbd = "pyterlink.nbd:main"
+
+[tool.setuptools.packages.find]
+include = ["pyterlink*"]
+
+[tool.setuptools.package-data]
+"pyterlink" = ["py.typed"]
+
+[tool.setuptools.dynamic]
+version = {attr = "pyterlink.__version__"}

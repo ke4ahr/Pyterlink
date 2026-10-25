@@ -1,0 +1,32 @@
+# Monit user-level config for example account abcd (adapt user/group as needed)
+# Copy this file to: /home/abcd/monit/monitrc  (mode 600: chmod 600 /home/abcd/monit/monitrc)
+# Then start with:  DISPLAY=:0 XAUTHORITY=/home/abcd/.Xauthority monit -c /home/abcd/monit/monitrc -I
+
+# Set a reasonable check interval (with start delay / cycle)
+set daemon 30 with start delay 30
+
+# Log, id and state files: kept in the same directory as this file
+# (otherwise monit writes its id and state files as hidden files in the home directory)
+set logfile /home/abcd/monit/monit.log
+set idfile /home/abcd/monit/monit.id
+set statefile /home/abcd/monit/monit.state
+
+# Shared directory watched by abcd (the monit user needs group read access)
+set httpd port 2812 and
+    use address localhost
+    allow localhost
+#    allow user:password  # set your own or disable
+
+# Lock file mechanism: separate .run.lock in shared dir
+# foo.sh creates it; foo-kill.sh removes it and removes trigger files.
+
+# --- Trigger: start server ---
+check file dosbox_run_trigger
+    path "/home/abcd/.control/dosbox-run-lnkserver.txt"
+    if exists then exec "/usr/bin/env PYTERLINK_CONTROL=/home/abcd/.control /home/abcd/Pyterlink/dosbox_x/run-lnkserver.sh"
+    if does not exist then alert  # optional notification when removed
+
+# --- Trigger: stop server (only valid after run; lock enforced in scripts) ---
+check file dosbox_stop_trigger
+    path "/home/abcd/.control/dosbox-stop-lnkserver.txt"
+    if exists then exec "/usr/bin/env PYTERLINK_CONTROL=/home/abcd/.control /home/abcd/Pyterlink/dosbox_x/stop-lnkserver.sh"
